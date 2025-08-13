@@ -12,7 +12,7 @@ All notes in this repository are originally made for personal documentation, but
 
 | No | Title | Short Description |
 |----|-------|-------------------|
-| 1  | [Disable Internal Keyboard (Arch Linux, Wayland)](docs/disable-internal-keyboard.md) | Guide to disabling the laptop's internal keyboard using a udev rule on Arch Linux with Wayland. |
+| 1  | [Disable Internal Keyboard (Arch Linux, Wayland)](https://github.com/synzx97/Disable-keyboard-internal-linux/blob/main/docs) | Guide to disabling the laptop's internal keyboard using a udev rule on Arch Linux with Wayland. |
 
 ---
 
