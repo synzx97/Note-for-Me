@@ -1,1 +1,50 @@
+ # How to Disable Internal Keyboard (Arch Linux, Wayland)
 
+Since I am using Arch Linux with the Wayland compositor, the first step is to identify the internal laptop keyboard device.
+
+1. List the input devices
+   sudo libinput list-devices
+   → For a cleaner view, run:
+   sudo udevadm info --export-db | grep -A10 -B5 "keyboard"
+
+   Example output:
+   J: +input:input4
+   U: input
+   E: DEVPATH=/devices/platform/i8042/serio0/input/input4
+   E: SUBSYSTEM=input
+   E: PRODUCT=11/1/1/ab83
+   E: NAME="AT Translated Set 2 keyboard"
+   E: PHYS="isa0060/serio0/input0"
+   E: PROP=0
+   E: EV=120013
+   E: KEY=180000 10000 c020000000000 0 0 700f02000002 3802078f870f401 febfffdfffefffff fffffffffffffffe
+   E: MSC=10
+   E: LED=7
+   E: MODALIAS=input:b0011v0001p0001eAB83-...
+   E: USEC_INITIALIZED=6122888
+   E: ID_INPUT=1
+   E: ID_INPUT_KEY=1
+
+2. From the output above, note:
+   - Vendor ID → 0001
+   - Product ID → 0001
+   - Device Name → "AT Translated Set 2 keyboard"
+   - Device Path → /devices/platform/i8042/serio0/input/input4
+   - Keyboard Port → `serio0` (from the PHYS=... line)
+
+   Since this is a PS/2 internal keyboard, there is no `/enabled` file in `/sys$devpath/device/enabled` like USB devices have.
+   On Arch/Wayland, a common method is to use udev to run a command to unbind the device from the `atkbd` driver.
+
+3. Create the udev rule file
+   sudo nano /etc/udev/rules.d/00-disable-internal-keyboard.rules
+
+   Add:
+   ACTION=="add", ATTRS{name}=="AT Translated Set 2 keyboard", RUN+="/bin/bash -c 'echo -n serio0 > /sys/bus/serio/drivers/atkbd/unbind'"
+
+   Replace `serio0` with the value found in step 1.
+
+4. Reload the udev rules
+   sudo udevadm control --reload-rules
+   sudo udevadm trigger
+
+5. Reboot the system
