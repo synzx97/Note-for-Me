@@ -17,7 +17,7 @@ All notes in this repository are originally made for personal documentation, but
 ---
 
 ## 📜 License
-All notes in this repository are released under the [MIT License](LICENSE).  
+All notes in this repository are released under the [MIT License](https://github.com/synzx97/MIT-LIC-synzx/tree/main?tab=MIT-1-ov-file).  
 Feel free to use, copy, or modify them, but please provide proper attribution.
 
 ---
