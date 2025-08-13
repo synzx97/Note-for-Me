@@ -1,4 +1,4 @@
- # How to Disable Internal Keyboard (Arch Linux, Wayland)
+ # How to Disable Internal Keyboard (Linux, compositor Wayland)
 
 Since I am using Arch Linux with the Wayland compositor, the first step is to identify the internal laptop keyboard device.
 
