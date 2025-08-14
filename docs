@@ -1,4 +1,5 @@
- # How to Disable Internal Keyboard (Linux, compositor Wayland)
+## English
+# How to Disable Internal Keyboard (Linux, compositor Wayland)
 
 Since I am using Arch Linux with the Wayland compositor, the first step is to identify the internal laptop keyboard device.
 
@@ -48,3 +49,51 @@ Since I am using Arch Linux with the Wayland compositor, the first step is to id
    sudo udevadm trigger
 
 5. Reboot the system
+
+## Indonesia
+
+# How To Disable Internal Keyboard (Arch Linux, Wayland)
+Karena disini saya menggunakan arch linux dengan kompositor wayland, maka cek devices keyboard internal laptop kamu dulu.
+
+1. sudo libinput list-devices
+  --> Jika ingin rapi sudo udevadm info --export-db | grep -A10 -B5 "keyboard"
+Contoh hasil output yang dikeluarkan
+J: +input:input4
+U: input
+E: DEVPATH=/devices/platform/i8042/serio0/input/input4
+E: SUBSYSTEM=input
+E: PRODUCT=11/1/1/ab83
+E: NAME="AT Translated Set 2 keyboard"
+E: PHYS="isa0060/serio0/input0"
+E: PROP=0
+E: EV=120013
+E: KEY=180000 10000 c020000000000 0 0 700f02000002 3802078f870f401 febfffdfffefffff fffffffffffffffe
+E: MSC=10
+E: LED=7
+E: MODALIAS=input:b0011v0001p0001eAB83-e0,1,4,11,14,k71,72,73,74,75,77,79,7A,7B,7C,7D,7E,7F,80,8A,8C,8D,8E,8F,94,95,96,9B,9C,9D,9E,9F,A3,A4,A5,A6,AD,B7,B8,B9,C1,D9,E0,E1,E2,E3,EC,ED,EE,1A9,1B2,1B3,1D0,213,214,ram4,l0,1,2,sfw
+E: USEC_INITIALIZED=6122888
+E: ID_INPUT=1
+E: ID_INPUT_KEY=1
+
+2. 
+-Vendor ID → 0001
+-Product ID → 0001
+-Nama device → "AT Translated Set 2 keyboard"
+-Path device → /devices/platform/i8042/serio0/input/input4
+
+Karena ini keyboard internal PS/2, kita nggak punya enabled file di /sys$devpath/device/enabled kayak di USB device.
+Di Arch/Wayland biasanya metode udev → run command bisa dipakai untuk mem-unbind device dari driver atkbd
+
+3. Buat file rule di /etc/udev/rules.d/
+sudo nano /etc/udev/rules.d/00-disable-internal-keyboard.rules
+Tambahkan perintah ini
+ACTION=="add", ATTRS{name}=="AT Translated Set 2 keyboard", RUN+="/bin/bash -c 'echo -n serio0 > /sys/bus/serio/drivers/atkbd/unbind'"
+Lalu simpan
+
+Ganti `serio0` sesuai hasil dari langkah 1.
+
+4.
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+5. Reboot
