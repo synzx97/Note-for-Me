@@ -1,0 +1,56 @@
+## 🖥️🖥️Menambahkan vmbr Baru di Proxmox untuk jaringan Internal
+
+Kondisi awal:
+ * IP Host Proxmox: 10.10.10.x/24
+ * Gatewat utama Host Proxmox: 10.10.10.x
+ * Target jaringan internal untuk CT: 192.175.1.x/24(gateway 192.175.1.x)
+ * vmbr0 sudah dipakai untuk akses utama, jadi kita akan membuat vmbr1 untuk jaringan internal CT
+
+1. Buat vmbr1 di Web UI Proxmox
+ a. Login ke Web UI Proxmox
+ b. Pilih Server Host --> Network --> Create --> Linux Bridge.
+ c. Isi: Nama vmbr1 saja untuk kolom yang lain kosongkan saja.
+    Name: vmbr1
+    Bridge prot: kosongkan
+ d. Simpan.
+
+2. Edit Konfigurasi Network Host
+ /etc/network/interfaces --> Tambahkan di bagian paling bawah:
+   auto vmbr1
+   iface vmbr1 inet static
+    	address 192.175.1.x/24
+    	bridge-ports none
+    	bridge-stp off
+    	bridge-fd 0
+3. Aktifkan vmbr1, Restart dan Cek Interfaces
+  # bash
+  ifup vmbr1
+  systemctl restart networking
+  ip addr show vmbr1
+
+4. Aktifkan IP Forwarding di Proxmox Host
+   Edit /etc/sysctl.conf
+   Cari command net.ipv4.ip_forward=1
+
+5. Terapkan: 
+  # bash
+  sysctl -p
+
+6. Atur NAT dan Cek
+ Jika internet CT lewat vmbr1 (10.10.10.x) jalankan:
+ iptables -t nat -A POSTROUTING -s 192.175.1.0/24 -o vmbr0 -j MASQUERADE
+ iptables -t nat -L -n -v
+
+7. Buat CT dan Test Koneksi
+ a. Buat CT baru --> IP 192.175.1.x/24
+ b. Gateway CT = IP vmbr1 di HostProxmox (contoh 192.175.1.1)
+ c. cek routing:
+	# bash 
+	ip route show
+ d. Jika defautl route belum ada tambahkan
+	# bash
+	ip route add defautl via 192.175.1.1
+
+8. Cek ke Internet
+ # bash
+ ping google.com
