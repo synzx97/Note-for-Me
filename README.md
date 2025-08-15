@@ -13,6 +13,7 @@ All notes in this repository are originally made for personal documentation, but
 | No | Title | Short Description |
 |----|-------|-------------------|
 | 1  | [Disable Internal Keyboard (Arch Linux, Wayland)](https://github.com/synzx97/Disable-keyboard-internal-linux/blob/main/docs) | Guide to disabling the laptop's internal keyboard using a udev rule on Arch Linux with Wayland. |
+| 2  | [Add a new vmbr in Proxmox](https://github.com/synzx97/Note-for-Me/blob/main/Proxmox-Tips/English_ProxmoxSetup-Add-vmbr) | Guide add vmbr in Proxmox (Internal Networking NAT for CT) |
 
 ---
 
