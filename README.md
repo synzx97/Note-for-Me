@@ -1,5 +1,5 @@
 ## Personal notes and for my study
-Personal notes and guides for Arch Linux, Wayland, and Linux tips.
+Personal notes and guides for Arch Linux (Wayland), server and Linux tips.
 
 # Linux Notes & Guides
 
